@@ -1,11 +1,9 @@
-import { Animated } from 'react-native'
-import ReAnimated from 'react-native-reanimated'
+type AnimationValue<T extends number | string | boolean> = T
 
-type AnimationValue<T extends number | string | boolean> =
-  | Animated.Value
-  | Animated.AnimatedInterpolation
-  | ReAnimated.Node<T>
-  | ReAnimated.Value<T>
+// | Animated.Value
+// | Animated.AnimatedInterpolation
+// | ReAnimated.Node<T>
+// | ReAnimated.Value<T>
 
 type Primitive = number | string | boolean
 
