@@ -1,0 +1,8 @@
+{
+  "extends": "@cookiex-react",
+  "rules": {
+    "max-params": [ "warn", 4 ],
+    "dot-notation": "off"
+  },
+  "ignorePatterns": "dist"
+}
