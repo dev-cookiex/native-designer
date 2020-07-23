@@ -153,7 +153,7 @@ namespace Form {
     initial?: any
     clearOnSubmit?: boolean
     on?: {
-      submit?: ( data: unknown ) => void
+      submit?: ( data: any ) => void
       register?: ( field: Field, fields: Field[] ) => void
       unregister?: ( field: Field, fields: Field[] ) => void
     }
