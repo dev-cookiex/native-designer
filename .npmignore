@@ -1,0 +1,15 @@
+__TESTS__
+android
+ios
+node_modules
+src
+
+.eslintrc
+.gitignore
+app.json
+babel.config.json
+index.js
+index.react.tsx
+jest.config.json
+tsconfig.json
+yarn.lock
