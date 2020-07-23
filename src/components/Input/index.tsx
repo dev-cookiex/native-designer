@@ -10,4 +10,4 @@ namespace Input {
   export import Submit = InputSubmit
 }
 
-export default Input
+export = Input

@@ -1,6 +1,6 @@
 {
   "name": "@cookiex-react/native-designer",
-  "version": "0.0.0",
+  "version": "0.0.0-2de99a7d8aa27d3ce8fe83aeed2ec23918ec56bf",
   "description": "Cookie X react-native tool to create components with styl",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "rm -rf dist && tsc"
+    "build": "rm -rf dist && tsc",
+    "prepublishOnly": "yarn test && yarn build"
   },
   "peerDependencies": {
     "react": "*",
