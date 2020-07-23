@@ -44,7 +44,7 @@ namespace Animator {
     reanimated?: boolean
     component: C
   } & {
-    [K in C extends ComponentType<infer P> ? keyof P : never]+?: C extends ComponentType<infer P> ? keyof P[K] : never
+    [K in C extends ComponentType<infer P> ? keyof P : never]+?: C extends ComponentType<infer P> ? P[K] : never
   }
 }
 
