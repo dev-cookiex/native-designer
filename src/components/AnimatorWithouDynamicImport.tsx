@@ -4,7 +4,8 @@ import { Animated } from 'react-native'
 const ANIMATOR_REANIMATED_KEY = Symbol( 'animator-key' )
 const ANIMATOR_NATIVE_KEY = Symbol( 'animator-key' )
 
-const AnimatorWithouDynamicImport = <C extends ComponentType<any>>( { component, ...props }: AnimatorWithouDynamicImport.Props<C> ) => {
+const AnimatorWithouDynamicImport = <C extends ComponentType<any>>(
+  { component, ...props }: AnimatorWithouDynamicImport.Props<C> ) => {
   const Component = AnimatorWithouDynamicImport.create( component )
   return <Component {...props} />
 }
