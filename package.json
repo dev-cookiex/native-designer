@@ -1,6 +1,6 @@
 {
   "name": "@cookiex-react/native-designer",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Cookie X react-native tool to create components with styl",
   "main": "dist/index.js",
   "module": "dist/index.js",
