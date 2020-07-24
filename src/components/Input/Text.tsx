@@ -16,6 +16,7 @@ const TextComponent = Create.text<Text.Props, TextInput>( ( {
   style,
   placeholder,
   type,
+  size,
   pointer,
   ...props
 }, inputRef ) => {
@@ -105,7 +106,10 @@ const TextComponent = Create.text<Text.Props, TextInput>( ( {
     {...events}
     {...access}
     {...processType}
-    style={ [ style, errors.length && {
+    style={ [ style, {
+      height: typeof style === 'object' && 'height' in style ? style.height : size,
+      fontSize: size
+    }, errors.length && {
       borderWidth: 1,
       borderColor: 'red'
     } ] }
@@ -197,6 +201,7 @@ namespace Text {
   export interface Props extends View.Props, Omit<TextInputProps, 'placeholder'> {
     name: string
     on?: Props.Events
+    size?: number
     type?: 'email' | 'phone' | 'number' | {
       content?: TextInputProps['textContentType']
       keyboard?: TextInputProps['keyboardType']
