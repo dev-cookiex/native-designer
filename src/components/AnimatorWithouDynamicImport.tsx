@@ -17,15 +17,12 @@ AnimatorWithouDynamicImport.create = <C extends ComponentType>( Component: C ) =
   if ( !Component[KEY] ) {
     const key = Symbol( `${Component.displayName ?? 'component'} animated` )
     Component[KEY] = key
-  
-    if ( 'prototype' in Component && 'render' in Component.prototype )
-      AnimatorWithouDynamicImport.storage[key] = Animated.createAnimatedComponent( Component )
-  
-    else AnimatorWithouDynamicImport.storage[key] = Animated.createAnimatedComponent(
-      class Animated extends React.Component<C extends ComponentType<infer P> ? P : {}> {
-          public component: C
-          public render = () =>
-            <Component { ...this.props as any } ref={ ( component: C ) => this.component = component }/>
+
+    AnimatorWithouDynamicImport.storage[key] = Animated.createAnimatedComponent(
+      class AnimatorContainer extends React.Component<C extends ComponentType<infer P> ? P : {}> {
+        public component: C
+        public render = () =>
+          <Component { ...this.props as any } ref={ ( component: C ) => this.component = component }/>
       }
     )
   }
