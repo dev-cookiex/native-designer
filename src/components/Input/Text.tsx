@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useMemo } from 'react'
+import React, { useRef, useEffect, useCallback, useMemo, useImperativeHandle } from 'react'
 import { TextInput, TextInputProps } from 'react-native'
 
 import mask from '../../helpers/mask'
@@ -7,7 +7,7 @@ import useField from '../../hooks/useField'
 import Create from '../../tools/Create'
 import View from '../View'
 
-const TextComponent = Create.text<Text.Props, TextInput>( ( {
+const TextComponent = Create.text<Text.Props, Text.Handler>( ( {
   name,
   mask: pattern,
   multiline,
@@ -16,7 +16,6 @@ const TextComponent = Create.text<Text.Props, TextInput>( ( {
   style,
   placeholder,
   type,
-  size,
   pointer,
   ...props
 }, inputRef ) => {
@@ -75,12 +74,15 @@ const TextComponent = Create.text<Text.Props, TextInput>( ( {
 
     else changeText?.( text )
   }, [ changeText, pattern, clear, errors ] )
+  const hasError = useCallback( () => !!errors.length, [ errors ] )
+  const firstError = useCallback( () => errors[0], [ errors ] )
 
-  const refCallback = useCallback( ( input: TextInput ) => {
-    if ( typeof inputRef === 'function' ) inputRef( input )
-    else if ( inputRef !== null ) inputRef.current = input
-    ref.current = input as any
-  }, [ inputRef ] )
+  useImperativeHandle( inputRef, () => ( {
+    errors,
+    hasError,
+    firstError,
+    native: ref.current
+  } ), [ errors, hasError, firstError ] )
 
   const processPlaceholder = useMemo( () => {
     if ( typeof placeholder === 'string' ) return { text: placeholder, color: undefined }
@@ -106,10 +108,7 @@ const TextComponent = Create.text<Text.Props, TextInput>( ( {
     {...events}
     {...access}
     {...processType}
-    style={ [ style, {
-      height: typeof style === 'object' && 'height' in style ? style.height : size,
-      fontSize: size
-    }, errors.length && {
+    style={ [ style, errors.length && {
       borderWidth: 1,
       borderColor: 'red'
     } ] }
@@ -119,7 +118,7 @@ const TextComponent = Create.text<Text.Props, TextInput>( ( {
     multiline={multiline && !pattern}
     onChangeText={onChangeText}
     defaultValue={defaultValue}
-    ref={refCallback}
+    ref={ref}
   />
 } )
 
@@ -198,10 +197,16 @@ namespace Text {
       touchStart: TextInputProps['onTouchStart']
     }
   }
+
+  export interface Handler {
+    hasError(): boolean
+    firstError(): Error
+    errors: Error[]
+    native: TextInput
+  }
   export interface Props extends View.Props, Omit<TextInputProps, 'placeholder'> {
     name: string
     on?: Props.Events
-    size?: number
     type?: 'email' | 'phone' | 'number' | {
       content?: TextInputProps['textContentType']
       keyboard?: TextInputProps['keyboardType']
