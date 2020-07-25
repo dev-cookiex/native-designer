@@ -8,6 +8,8 @@ const FormComponent = forwardRef<Form.Handlers, Form.Props>( ( props, formRef ) 
   const [ errors, setErrors ] = useState<Form.Errors>( {} )
   const fields = useRef<Form.Field[]>( [] ).current
 
+  console.log( 'rendering form' )
+
   const data = useCallback( () => {
     return Object.assign( {}, ...fields.map( fieldMap ) )
   }, [ fields ] )
@@ -33,12 +35,12 @@ const FormComponent = forwardRef<Form.Handlers, Form.Props>( ( props, formRef ) 
   }, [] )
 
   const clearError = useCallback( ( path?: string ) => {
-    if ( path ) setErrors( errors => ( {
+    if ( path && errors[path]?.length ) setErrors( errors => ( {
       ...errors,
       [path]: undefined
     } ) )
     else setErrors( {} )
-  }, [] )
+  }, [ errors ] )
 
   const clearField = useCallback( ( name?: string | boolean, error = true ) => {
     if ( typeof name === 'string' ) {

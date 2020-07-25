@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useImperativeHandle, useEffect, useCallback } from 'react'
+import React, { useMemo, useRef, useEffect, useCallback } from 'react'
 import { TextInputProps, TextInput } from 'react-native'
 
 import mask from '../helpers/mask'
@@ -39,17 +39,12 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
     }
   }, [ type ] )
 
-  useImperativeHandle( inputRef, () => ref.current )
-
   const onChangeText = useCallback( ( text: string ) => {
     if ( ref.current ) {
       if ( pattern ) ref.current.setNativeProps( { text: mask( text, pattern ) } )
       ref.current.value = pattern ? text.replace( /\D/g, '' ) : text
     }
-    if ( pattern )
-      changeText?.( text.replace( /\D/g, '' ) )
-
-    else changeText?.( text )
+    changeText?.( pattern ? text.replace( /\D/g, '' ) : text )
   }, [ changeText, pattern ] )
 
   useEffect( () => {
@@ -61,6 +56,12 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
       }
     }
   }, [ defaultValue, pattern ] )
+
+  const refCallback = ( textInput: TextInput ) => {
+    if ( typeof inputRef === 'function' ) inputRef( textInput as any )
+    else inputRef.current = textInput as any
+    ref.current = textInput as any
+  }
   
   return <TextInput
     {...props}
@@ -73,7 +74,7 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
     multiline={multiline && !pattern}
     onChangeText={onChangeText}
     defaultValue={defaultValue}
-    ref={inputRef}
+    ref={refCallback}
   />
 } )
 

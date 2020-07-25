@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback, useMemo, useImperativeHandle, forwardRef } from 'react'
+import React, { useRef, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react'
 
 import mask from '../../helpers/mask'
 import useField from '../../hooks/useField'
@@ -39,15 +39,15 @@ const TextComponent = forwardRef<Text.Handler, Text.Props>( ( {
     ref.current.clear?.()
   }, [] )
 
-  const info = useMemo( () => ( {
-    path: 'value',
-    target: ref.current,
-    setValue,
-    getValue,
-    clearValue
-  } ), [ setValue, getValue, clearValue ] )
-
-  useEffect( () => { register( info ) }, [ register, info ] )
+  useEffect( () => {
+    register( {
+      path: 'value',
+      target: ref.current,
+      setValue,
+      getValue,
+      clearValue
+    } )
+  } )
 
   const hasError = useCallback( () => !!errors.length, [ errors ] )
   const firstError = useCallback( () => errors[0], [ errors ] )
@@ -56,13 +56,13 @@ const TextComponent = forwardRef<Text.Handler, Text.Props>( ( {
     errors,
     hasError,
     firstError,
-    inputText: ref.current
+    get inputText() { return ref.current }
   } ), [ errors, hasError, firstError ] )
 
   const changeText = useCallback( ( text: string ) => {
     propChangeText?.( text )
-    if ( !preventClearErrorOnChange ) clear()
-  }, [ propChangeText, preventClearErrorOnChange, clear ] )
+    if ( !preventClearErrorOnChange && errors.length ) clear()
+  }, [ propChangeText, preventClearErrorOnChange, clear, errors ] )
   
   return <InputText
     {...props}
