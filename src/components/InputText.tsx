@@ -14,6 +14,7 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
   placeholder,
   type,
   pointer,
+  defaultValue,
   ...props
 }, inputRef ) => {
   const ref = useRef<TextInput & { value: string }>( null )
@@ -38,11 +39,11 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
     }
   }, [ type ] )
 
-  useEffect( () => {
-    if ( !ref.current.value ) ref.current.value = ''
-  }, [] )
-
   useImperativeHandle( inputRef, () => ref.current )
+
+  const Changer = useCallback( ( text: string ) => {
+
+  } )
 
   const onChangeText = useCallback( ( text: string ) => {
     if ( ref.current ) {
@@ -54,6 +55,16 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
 
     else changeText?.( text )
   }, [ changeText, pattern ] )
+
+  useEffect( () => {
+    const text = defaultValue
+    if ( ref.current && !ref.current.value ) {
+      if ( ref.current ) {
+        if ( pattern ) ref.current.setNativeProps( { text: mask( text, pattern ) } )
+        ref.current.value = pattern ? text.replace( /\D/g, '' ) : text
+      }
+    }
+  }, [ defaultValue, pattern ] )
   
   return <TextInput
     {...props}
@@ -65,6 +76,7 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
     placeholderTextColor={processPlaceholder.color}
     multiline={multiline && !pattern}
     onChangeText={onChangeText}
+    defaultValue={defaultValue}
     ref={inputRef}
   />
 } )
