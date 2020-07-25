@@ -1,11 +1,10 @@
-import React, { useRef, useEffect, useCallback, useMemo, useImperativeHandle } from 'react'
+import React, { useRef, useEffect, useCallback, useMemo, useImperativeHandle, forwardRef } from 'react'
 
 import mask from '../../helpers/mask'
 import useField from '../../hooks/useField'
-import Create from '../../tools/Create'
 import InputText from '../InputText'
 
-const TextComponent = Create.text<Text.Props, Text.Handler>( ( {
+const TextComponent = forwardRef<Text.Handler, Text.Props>( ( {
   name,
   preventErrorStyleChange,
   preventClearErrorOnChange,
