@@ -41,10 +41,6 @@ const InputTextComponent = Create.text<InputText.Props, InputText.Handler>( ( {
 
   useImperativeHandle( inputRef, () => ref.current )
 
-  const Changer = useCallback( ( text: string ) => {
-
-  } )
-
   const onChangeText = useCallback( ( text: string ) => {
     if ( ref.current ) {
       if ( pattern ) ref.current.setNativeProps( { text: mask( text, pattern ) } )
