@@ -17,6 +17,7 @@ const TextComponent = Create.text<Text.Props, Text.Handler>( ( {
   placeholder,
   type,
   pointer,
+  preventErrorStyleChange,
   ...props
 }, inputRef ) => {
   const { register, defaultValue, errors, clear } = useField( name )
@@ -108,10 +109,7 @@ const TextComponent = Create.text<Text.Props, Text.Handler>( ( {
     {...events}
     {...access}
     {...processType}
-    style={ [ style, errors.length && {
-      borderWidth: 1,
-      borderColor: 'red'
-    } ] }
+    style={ [ style, errors.length && !preventErrorStyleChange && defaultErrorStyle ] }
     pointerEvents={pointer}
     placeholder={processPlaceholder.text}
     placeholderTextColor={processPlaceholder.color}
@@ -121,6 +119,11 @@ const TextComponent = Create.text<Text.Props, Text.Handler>( ( {
     ref={ref}
   />
 } )
+
+const defaultErrorStyle = {
+  borderWidth: 1,
+  borderColor: 'red'
+}
 
 const preSetTypes = {
   email: {
@@ -206,6 +209,7 @@ namespace Text {
   }
   export interface Props extends View.Props, Omit<TextInputProps, 'placeholder'> {
     name: string
+    preventErrorStyleChange?: boolean
     on?: Props.Events
     type?: 'email' | 'phone' | 'number' | {
       content?: TextInputProps['textContentType']
