@@ -8,8 +8,6 @@ const FormComponent = forwardRef<Form.Handlers, Form.Props>( ( props, formRef ) 
   const [ errors, setErrors ] = useState<Form.Errors>( {} )
   const fields = useRef<Form.Field[]>( [] ).current
 
-  console.log( 'rendering form' )
-
   const data = useCallback( () => {
     return Object.assign( {}, ...fields.map( fieldMap ) )
   }, [ fields ] )
