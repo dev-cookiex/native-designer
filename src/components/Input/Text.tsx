@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useCallback, useImperativeHandle, forwardRef 
 
 import mask from '../../helpers/mask'
 import useField from '../../hooks/useField'
+import Create from '../../tools/Create'
 import InputText from '../InputText'
 
 const TextComponent = forwardRef<Text.Handler, Text.Props>( ( {
@@ -40,14 +41,14 @@ const TextComponent = forwardRef<Text.Handler, Text.Props>( ( {
   }, [] )
 
   useEffect( () => {
-    register( {
+    return register( {
       path: 'value',
       target: ref.current,
       setValue,
       getValue,
       clearValue
     } )
-  } )
+  }, [ setValue, getValue, clearValue, register ] )
 
   const hasError = useCallback( () => !!errors.length, [ errors ] )
   const firstError = useCallback( () => errors[0], [ errors ] )
@@ -84,7 +85,8 @@ namespace Text {
     errors: Error[]
     inputText: InputText.Handler
   }
-  export interface Props extends InputText.Props {
+
+  export type Props = Create.GetDesignProps<typeof InputText> & {
     name: string
     preventErrorStyleChange?: boolean
     preventClearErrorOnChange?: boolean

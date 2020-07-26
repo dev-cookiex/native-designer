@@ -1,4 +1,4 @@
-import { useContext, useCallback, useMemo, useEffect } from 'react'
+import { useContext, useCallback, useMemo } from 'react'
 
 import Form from '../components/Form'
 import dot from '../tools/dot'
@@ -19,7 +19,8 @@ const useField = ( fieldName: string ) => {
   
   const register = useCallback( ( field: Omit<Form.Field, 'name'> & Pick<Partial<Form.Field>, 'name'> ) => {
     registerField( { name, ...field } )
-  }, [ name, registerField ] )
+    return () => unregister.field( name )
+  }, [ name, registerField, unregister ] )
 
   const defaultValue = useMemo( () => {
     return dot.pick( name, initial )
@@ -32,10 +33,6 @@ const useField = ( fieldName: string ) => {
   const clear = useCallback( () => {
     clearError( name )
   }, [ name, clearError ] )
-
-  useEffect( () => {
-    return () => unregister.field( name )
-  }, [ name, unregister ] )
 
   return { name, register, defaultValue, errors, clear }
 }
