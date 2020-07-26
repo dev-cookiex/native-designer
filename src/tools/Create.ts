@@ -10,6 +10,10 @@ namespace Create {
   export interface DesignRenderFunction<P, T> extends ForwardRefRenderFunction<T, P> {}
   export type DesignProps<P, A, T> = A & PropsWithoutRef<P> & RefAttributes<T>
   export type DesignResumedProps<P, A, S> = Omit<P, keyof A> & { style: StyleProp<S> }
+  export type GetDesignProps<
+    C extends DesignExoticComponent<any>
+  > = C extends DesignExoticComponent<infer P> ? PropsWithChildren<P> : never
+
   export const view = <P, T = any>(
     render: DesignRenderFunction<P & { style: StyleProp<ViewStyle> }, T>
   ): DesignExoticComponent<DesignProps<P & { style?: StyleProp<ViewStyle> }, View.Attributes, T>> => {
