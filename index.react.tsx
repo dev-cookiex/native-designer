@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback, useRef } from 'react'
 
 import { Form, Input, Text, SafeArea, View } from './dist'
 
@@ -7,9 +7,17 @@ const App = () => {
     return [ { label: 'Elf', value: 'elf' }, { label: 'Human', value: 'human' } ]
   }, [] )
 
+  const form = useRef<Form.Handlers>( null )
+
+  const submit = useCallback( ( data: any ) => {
+    if ( !data.name ) return form.current.register.error( 'name', new Error( 'name is required' ) )
+    console.log( data )
+    return void 0
+  }, [] )
+
   return (
     <SafeArea flex>
-      <Form on={ { submit: console.log } }>
+      <Form on={ { submit } } ref={form}>
         <View align margin={ { top: 10, horizontal: 10 } } radius={5} bg='white' shadow={5} padding={ { horizontal: 10, vertical: 20 } }>
           <Text margin={ { right: 'auto' } }>Formulário de Personagem</Text>
           <View flex={ { direction: 'row' } } margin={ { vertical: 10 } } style={ { elevation: 6 } } align>

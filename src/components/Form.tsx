@@ -8,7 +8,7 @@ const FormComponent = forwardRef<Form.Handlers, Form.Props>( ( props, formRef ) 
   const [ errors, setErrors ] = useState<Form.Errors>( {} )
   const fields = useRef<Form.Field[]>( [] ).current
 
-  const data = useCallback( () => {
+  const getData = useCallback( () => {
     return Object.assign( {}, ...fields.map( fieldMap ) )
   }, [ fields ] )
 
@@ -82,8 +82,8 @@ const FormComponent = forwardRef<Form.Handlers, Form.Props>( ( props, formRef ) 
 
   const submit = useCallback( () => {
     if ( props.clearOnSubmit ) clearError()
-    props.on?.submit?.( data() )
-  }, [ props.on, data, props.clearOnSubmit, clearError ] )
+    props.on?.submit?.( getData() )
+  }, [ props.on, getData, props.clearOnSubmit, clearError ] )
 
   const scope = useMemo( () => {
     return props.scope ?? ''
@@ -93,16 +93,26 @@ const FormComponent = forwardRef<Form.Handlers, Form.Props>( ( props, formRef ) 
     return props.initial ?? {}
   }, [ props.initial ] )
 
-  useImperativeHandle( formRef, () => ( {
+  const handlers = useMemo( () => ( {
     submit,
     register,
     unregister,
     clear,
-    reset
-  } ) )
+    reset,
+    getData
+  } ), [ submit, register, unregister, clear, reset, getData ] )
+
+  useImperativeHandle( formRef, () => handlers, [ handlers ] )
+
+  const provided = useMemo( () => ( {
+    ...handlers,
+    scope,
+    initial,
+    errors
+  } ), [ handlers, scope, initial, errors ] )
 
   return (
-    <Context.Provider value={ { register, submit, scope, initial, errors, clear, unregister, reset } }>
+    <Context.Provider value={ provided }>
       {props.children}
     </Context.Provider>
   )
@@ -128,6 +138,7 @@ namespace Form {
   }
   export interface Context extends React.Context<Context.Body> {}
   export interface Handlers {
+    getData(): any
     submit(): void
     register: {
       field( field: Field ): void
